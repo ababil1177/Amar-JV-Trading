@@ -8,7 +8,7 @@
         :root { --primary: #00a651; --secondary: #1a73e8; --danger: #ea4335; --dark: #2c3e50; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* --- Welcome / Icon Screen (Splash) --- */
+        /* --- Splash Screen --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #2c3e50, #1a252f);
@@ -26,74 +26,54 @@
         .welcome-text { color: white; font-size: 26px; font-weight: bold; letter-spacing: 2px; }
         .click-hint { color: #bdc3c7; margin-top: 10px; font-size: 14px; }
 
-        /* --- Main Content (Hidden Initially) --- */
+        /* --- Main Layout --- */
         #main-content { display: none; padding: 20px; }
-
         .container { 
             max-width: 1300px; margin: auto; background: white; padding: 25px; 
-            border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-            position: relative; overflow: hidden;
+            border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative;
         }
 
         .watermark-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
-            pointer-events: none; z-index: 0;
+            pointer-events: none; z-index: 0; opacity: 0.05;
         }
-        .wm-text {
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.04);
-            transform: rotate(-25deg); white-space: nowrap;
-        }
+        .wm-text { transform: rotate(-25deg); font-weight: bold; font-size: 20px; }
 
-        .top-header, .sheet-bar, table, .footer { position: relative; z-index: 2; }
-        .top-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
-        .brand-inputs { display: flex; gap: 10px; flex-wrap: wrap; }
-        .brand-inputs div { display: flex; flex-direction: column; font-size: 13px; font-weight: bold; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 2;}
+        .brand-inputs { display: flex; gap: 10px; }
+        .btn { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; display: flex; align-items: center; gap: 5px; font-size: 13px; }
+        .btn-blue { background: var(--secondary); } .btn-green { background: var(--primary); } .btn-orange { background: #f39c12; } .btn-purple { background: #673ab7; }
 
-        .btn { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; display: flex; align-items: center; gap: 5px; font-size: 14px; }
-        .btn-blue { background: var(--secondary); }
-        .btn-green { background: var(--primary); }
-        .btn-orange { background: #f39c12; }
-        .btn-purple { background: #673ab7; }
-        .btn-gray { background: #5f6368; }
-        .btn-backup { background: #27ae60; }
-        .btn-restore { background: #d35400; }
+        .sheet-bar { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding: 5px; }
+        .sheet-tab { padding: 8px 15px; background: #eee; border-radius: 5px; cursor: pointer; font-weight: bold; display: flex; align-items: center; }
+        .sheet-tab.active { background: var(--secondary); color: white; }
+        .del-x { margin-left: 8px; color: red; }
 
-        .sheet-bar { display: flex; align-items: center; gap: 10px; background: #eef2f7; padding: 10px; border-radius: 8px; margin-bottom: 20px; overflow-x: auto; }
-        .sheet-tab { display: flex; align-items: center; background: white; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; padding: 6px 12px; white-space: nowrap; font-weight: bold; }
-        .sheet-tab.active { background: var(--secondary); color: white; border-color: var(--secondary); }
-        .del-x { color: #ff4d4d; font-size: 18px; cursor: pointer; font-weight: bold; margin-left: 8px; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; background: transparent; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; z-index: 2; position: relative; }
         th { background: var(--dark); color: white; padding: 10px; border: 1px solid #ddd; }
-        td { border: 1px solid #ddd; padding: 8px; text-align: center; background: rgba(255, 255, 255, 0.7); }
-        .qty-input { width: 70px; padding: 5px; text-align: center; border: 1px solid #bbb; border-radius: 4px; }
-        input:disabled { background-color: #f0f0f0; cursor: not-allowed; }
+        td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        .qty-input { width: 70px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
 
-        .footer { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 25px; }
+        .footer { display: flex; justify-content: space-between; margin-top: 25px; position: relative; z-index: 2;}
         .calc-card { width: 340px; background: var(--dark); color: white; padding: 15px; border-radius: 10px; }
-        .calc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .net-payable { border-top: 2px solid #555; padding-top: 10px; font-size: 22px; color: #2ecc71; font-weight: bold; }
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-        .modal-content { background: white; margin: 5% auto; padding: 20px; width: 450px; border-radius: 10px; }
+        .modal-content { background: white; margin: 5% auto; padding: 20px; width: 400px; border-radius: 10px; }
         
-        @media print { 
-            .no-print { display: none !important; } 
-            .wm-text { color: rgba(0, 0, 0, 0.08); }
-        }
+        #syncStatus { position: fixed; bottom: 10px; left: 10px; background: #333; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; display: none; z-index: 10000; }
+        @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body>
 
+<div id="syncStatus">Syncing...</div>
+
 <div id="splash-screen">
-    <div class="app-icon" onclick="openApp()">
-        Amar JV
-    </div>
+    <div class="app-icon" onclick="openApp()">Amar JV</div>
     <div class="welcome-text">AMAR JV TRADING</div>
-    <div class="click-hint">Click Icon to Open Sheet</div>
+    <div class="click-hint">Click Icon to Sync & Open</div>
 </div>
 
 <div id="main-content">
@@ -101,267 +81,209 @@
         <div class="watermark-layer">
             <div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div>
             <div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div>
-            <div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div>
         </div>
 
         <div class="top-header">
             <div class="brand-inputs">
-                <div>DSR <input type="text" id="dsrName"></div>
-                <div>Company <input type="text" id="compName"></div>
-                <div>Date <input type="date" id="mainDate" onchange="renderApp()"></div>
+                <div>DSR <br><input type="text" id="dsrName"></div>
+                <div>Company <br><input type="text" id="compName"></div>
+                <div>Date <br><input type="date" id="mainDate" onchange="renderApp()"></div>
             </div>
-            <div class="action-bar no-print" style="display:flex; gap:8px; flex-wrap: wrap;">
+            <div class="no-print" style="display:flex; gap:8px; flex-wrap: wrap;">
                 <button class="btn btn-blue" onclick="openModal('productModal')">+ Product</button>
-                <button class="btn btn-orange" onclick="openStockModal()">📦 Add Stock</button>
-                <button class="btn btn-purple" onclick="openDeleteModal()">🗑️ Itm Dlt</button>
-                <button class="btn btn-green" id="saveBtn" onclick="saveCurrentSheet()">💾 Save Sheet</button>
-                <button class="btn btn-backup" onclick="exportBackup()">📥 Backup</button>
-                <button class="btn btn-restore" onclick="document.getElementById('importFile').click()">📤 Restore</button>
-                <input type="file" id="importFile" style="display:none" onchange="importBackup(event)">
-                <button class="btn btn-gray" onclick="window.print()">Print</button>
+                <button class="btn btn-orange" onclick="openStockModal()">📦 Stock</button>
+                <button class="btn btn-purple" onclick="openDeleteModal()">🗑️ Delete</button>
+                <button class="btn btn-green" id="saveBtn" onclick="saveAndSync()">💾 Save & Sync</button>
+                <button class="btn btn-purple" onclick="window.print()">Print</button>
             </div>
         </div>
 
         <div class="sheet-bar no-print" id="sheetList"></div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 id="viewTitle" style="color:var(--dark); margin:0;">Daily Sheet</h3>
-            <button class="btn btn-purple no-print" id="editBtn" onclick="enableEditing()" style="display:none; font-size: 12px;">✏️ Edit Sheet</button>
-        </div>
-
         <table>
             <thead>
                 <tr>
-                    <th>SL</th>
-                    <th>Item Description</th>
-                    <th>CTN Size</th>
-                    <th>Stock</th>
-                    <th>DLV</th>
-                    <th>RTN</th>
-                    <th>Sale</th>
-                    <th>Rate</th>
-                    <th>Total Price</th>
+                    <th>SL</th><th>Description</th><th>CTN</th><th>Stock</th><th>DLV</th><th>RTN</th><th>Sale</th><th>Rate</th><th>Total</th>
                 </tr>
             </thead>
             <tbody id="inventoryBody"></tbody>
         </table>
 
         <div class="footer">
-            <div class="no-print" style="color: #666; font-size: 13px;"><p id="statusMsg">💡 প্রতি শিটে আলাদা নাম লিখে সেভ করুন।</p></div>
+            <button class="btn btn-blue no-print" onclick="loadFromCloud()">🔄 Refresh Data</button>
             <div class="calc-card">
-                <div class="calc-row"><span>Gross Total:</span> <span id="totalDisplay">0</span></div>
-                <div class="calc-row"><span>Damage Amount:</span> <input type="number" id="damageInput" class="qty-input" value="0" oninput="tempCalc()"></div>
-                <div class="calc-row"><span>Discount (-):</span> <input type="number" id="discountInput" class="qty-input" value="0" oninput="tempCalc()" style="border-color: #f39c12;"></div>
-                <div class="net-payable"><div style="display:flex; justify-content:space-between"><span>Net Payable:</span> <span id="netDisplay">0</span></div></div>
+                <div style="display:flex; justify-content:space-between"><span>Gross:</span> <span id="totalDisplay">0</span></div>
+                <div style="display:flex; justify-content:space-between; margin:8px 0;"><span>Damage:</span> <input type="number" id="damageInput" class="qty-input" value="0" oninput="tempCalc()"></div>
+                <div style="display:flex; justify-content:space-between; margin:8px 0;"><span>Discount:</span> <input type="number" id="discountInput" class="qty-input" value="0" oninput="tempCalc()"></div>
+                <div class="net-payable"><div style="display:flex; justify-content:space-between"><span>Net:</span> <span id="netDisplay">0</span></div></div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="productModal" class="modal"><div class="modal-content"><h3>Add New Product</h3><label>Name</label><input type="text" id="mPName" style="width:95%"><br><br><label>Rate</label><input type="number" id="mPRate" style="width:95%"><br><br><label>CTN Size</label><input type="number" id="mPCtn" value="1" style="width:95%"><br><br><label>Stock</label><input type="number" id="mPStock" value="0" style="width:95%"><br><br><button class="btn btn-blue" style="width:100%" onclick="saveNewProduct()">Save Product</button></div></div>
-<div id="deleteItemModal" class="modal"><div class="modal-content"><h3>Delete Product List</h3><div id="deleteListContent"></div><br><button class="btn btn-gray" style="width:100%" onclick="closeModals()">Close</button></div></div>
-<div id="stockModal" class="modal"><div class="modal-content"><h3>Add Stock Quantity</h3><div id="stockListContent"></div><br><button class="btn btn-green" style="width:100%" onclick="closeModals()">Done</button></div></div>
+<div id="productModal" class="modal"><div class="modal-content"><h3>Add Product</h3><input type="text" id="mPName" placeholder="Name" style="width:95%"><br><br><input type="number" id="mPRate" placeholder="Rate" style="width:95%"><br><br><input type="number" id="mPCtn" value="1" placeholder="CTN Size" style="width:95%"><br><br><button class="btn btn-blue" style="width:100%" onclick="saveNewProduct()">Save</button><br><button onclick="closeModals()" style="width:100%; margin-top:5px;">Cancel</button></div></div>
+<div id="stockModal" class="modal"><div class="modal-content"><h3>Add Stock</h3><div id="stockListContent"></div><br><button class="btn btn-green" style="width:100%" onclick="closeModals()">Done</button></div></div>
+<div id="deleteModal" class="modal"><div class="modal-content"><h3>Delete Item</h3><div id="deleteListContent"></div><br><button onclick="closeModals()" style="width:100%">Close</button></div></div>
 
 <script>
+    const G_SHEET_URL = "https://script.google.com/macros/s/AKfycbYC93Mmd-vw9i9dyotf0LlyzG1_zOW_TPksUzLYZCw5MlVhhHD5hxFqEHstmjG7Jlcp5Q/exec";
     let currentSheet = 1;
     let isEditMode = true;
     document.getElementById('mainDate').valueAsDate = new Date();
 
-    // OPEN APP FUNCTION (Splash Screen Transition)
-    function openApp() {
-        const splash = document.getElementById('splash-screen');
-        const main = document.getElementById('main-content');
-        splash.style.transform = 'translateY(-100%)';
+    async function openApp() {
+        showStatus("Syncing with Cloud...");
+        await loadFromCloud();
+        document.getElementById('splash-screen').style.transform = 'translateY(-100%)';
         setTimeout(() => {
-            splash.style.display = 'none';
-            main.style.display = 'block';
-            renderApp();
+            document.getElementById('splash-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
         }, 600);
     }
 
-    function openModal(id) { document.getElementById(id).style.display = 'block'; }
-    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); renderApp(); }
-
-    function openDeleteModal() {
-        let master = JSON.parse(localStorage.getItem('master_products')) || [];
-        let content = document.getElementById('deleteListContent');
-        content.innerHTML = master.map((p, i) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
-                <span>${p.name}</span><button class="btn btn-orange" style="padding:4px 8px; font-size:12px;" onclick="deleteProduct(${i})">Delete</button>
-            </div>
-        `).join('') || "No products found.";
-        openModal('deleteItemModal');
+    function showStatus(msg) {
+        const s = document.getElementById('syncStatus');
+        s.innerText = msg; s.style.display = 'block';
+        setTimeout(() => s.style.display = 'none', 3000);
     }
 
-    function openStockModal() {
-        let master = JSON.parse(localStorage.getItem('master_products')) || [];
-        let content = document.getElementById('stockListContent');
-        content.innerHTML = master.map((p, i) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee;">
-                <span>${p.name} (${p.stock})</span><input type="number" placeholder="+Qty" style="width:60px" onchange="updateMasterStock(${i}, this.value)">
-            </div>
-        `).join('');
-        openModal('stockModal');
-    }
-
-    function updateMasterStock(idx, val) {
-        let master = JSON.parse(localStorage.getItem('master_products'));
-        master[idx].stock += (parseInt(val) || 0);
-        localStorage.setItem('master_products', JSON.stringify(master));
-        openStockModal();
-    }
-
-    function saveNewProduct() {
-        let master = JSON.parse(localStorage.getItem('master_products')) || [];
-        master.push({
-            name: document.getElementById('mPName').value,
-            rate: parseFloat(document.getElementById('mPRate').value),
-            ctn: parseInt(document.getElementById('mPCtn').value) || 1,
-            stock: parseInt(document.getElementById('mPStock').value) || 0
-        });
-        localStorage.setItem('master_products', JSON.stringify(master));
-        closeModals();
-    }
-
-    function deleteProduct(idx) {
-        if(confirm("Delete item?")) {
-            let master = JSON.parse(localStorage.getItem('master_products')) || [];
-            master.splice(idx, 1);
-            localStorage.setItem('master_products', JSON.stringify(master));
-            openDeleteModal(); renderApp();
-        }
-    }
-
-    function saveCurrentSheet() {
-        let date = document.getElementById('mainDate').value;
-        let master = JSON.parse(localStorage.getItem('master_products')) || [];
-        let key = `data_${date}_s${currentSheet}`;
-        let oldData = JSON.parse(localStorage.getItem(key)) || { entries: {} };
-        
-        let newEntries = {};
-        master.forEach((p, i) => {
-            let dlv = parseInt(document.getElementById(`dlv_${i}`).value) || 0;
-            let rtn = parseInt(document.getElementById(`rtn_${i}`).value) || 0;
-            let newSale = dlv - rtn;
-            let oldSale = oldData.entries[p.name]?.sale || 0;
-            master[i].stock -= (newSale - oldSale);
-            newEntries[p.name] = { dlv, rtn, sale: newSale };
-        });
-
-        localStorage.setItem(key, JSON.stringify({ 
-            dsr: document.getElementById('dsrName').value,
-            comp: document.getElementById('compName').value,
-            entries: newEntries, 
-            damage: parseInt(document.getElementById('damageInput').value) || 0,
-            discount: parseInt(document.getElementById('discountInput').value) || 0,
-            saved: true 
-        }));
-        localStorage.setItem('master_products', JSON.stringify(master));
-        isEditMode = false; alert("Sheet Saved!"); renderApp();
-    }
-
-    function renderApp() {
-        let date = document.getElementById('mainDate').value;
-        let sheets = JSON.parse(localStorage.getItem('sheets_'+date)) || [1];
-        let master = JSON.parse(localStorage.getItem('master_products')) || [];
-        
-        document.getElementById('sheetList').innerHTML = sheets.map(s => `
-            <div class="sheet-tab ${currentSheet === s ? 'active' : ''}" onclick="currentSheet=${s}; isEditMode=false; renderApp()">
-                Sheet ${s} <span class="del-x" onclick="event.stopPropagation(); deleteSheet(${s})">×</span>
-            </div>
-        `).join('') + `<button class="btn btn-green no-print" style="padding:4px 8px; margin-left:10px;" onclick="addNewSheet()">+ New</button>`;
-
-        let sheetData = JSON.parse(localStorage.getItem(`data_${date}_s${currentSheet}`)) || { dsr: "", comp: "", entries: {}, damage: 0, discount: 0, saved: false };
-        let locked = sheetData.saved && !isEditMode;
-        
-        document.getElementById('dsrName').value = sheetData.dsr || "";
-        document.getElementById('compName').value = sheetData.comp || "";
-        document.getElementById('dsrName').disabled = locked;
-        document.getElementById('compName').disabled = locked;
-
-        document.getElementById('editBtn').style.display = (sheetData.saved && !isEditMode) ? 'block' : 'none';
-        document.getElementById('saveBtn').disabled = locked;
-
-        let body = document.getElementById('inventoryBody');
-        body.innerHTML = master.map((p, i) => {
-            let dlv = sheetData.entries[p.name]?.dlv || 0;
-            let rtn = sheetData.entries[p.name]?.rtn || 0;
-            let sale = dlv - rtn;
-            return `<tr><td>${i+1}</td><td style="text-align:left">${p.name}</td><td>${p.ctn}</td><td style="background:rgba(255, 249, 196, 0.5); font-weight:bold">${p.stock}</td><td><input type="number" id="dlv_${i}" class="qty-input" value="${dlv}" oninput="tempCalc()" ${locked ? 'disabled' : ''}></td><td><input type="number" id="rtn_${i}" class="qty-input" value="${rtn}" oninput="tempCalc()" ${locked ? 'disabled' : ''}></td><td>${sale}</td><td>${p.rate}</td><td style="color:var(--primary); font-weight:bold">${(sale * p.rate).toLocaleString()}</td></tr>`;
-        }).join('');
-
-        document.getElementById('damageInput').value = sheetData.damage;
-        document.getElementById('discountInput').value = sheetData.discount || 0;
-        document.getElementById('damageInput').disabled = locked;
-        document.getElementById('discountInput').disabled = locked;
-        document.getElementById('viewTitle').innerText = `Sheet: ${currentSheet} | ${date}`;
-        tempCalc();
-    }
-
-    function tempCalc() {
-        let master = JSON.parse(localStorage.getItem('master_products')) || [];
-        let grandTotal = 0;
-        master.forEach((p, i) => {
-            let sale = (parseInt(document.getElementById(`dlv_${i}`).value) || 0) - (parseInt(document.getElementById(`rtn_${i}`).value) || 0);
-            grandTotal += (sale * p.rate);
-        });
-        document.getElementById('totalDisplay').innerText = grandTotal.toLocaleString();
-        let dmg = parseInt(document.getElementById('damageInput').value) || 0;
-        let disc = parseInt(document.getElementById('discountInput').value) || 0;
-        document.getElementById('netDisplay').innerText = (grandTotal - dmg - disc).toLocaleString() + " TK";
-    }
-
-    function addNewSheet() {
-        let date = document.getElementById('mainDate').value;
-        let sheets = JSON.parse(localStorage.getItem('sheets_'+date)) || [1];
-        let next = sheets.length > 0 ? Math.max(...sheets) + 1 : 1;
-        sheets.push(next);
-        localStorage.setItem('sheets_'+date, JSON.stringify(sheets));
-        currentSheet = next; isEditMode = true; renderApp();
-    }
-
-    function deleteSheet(num) {
-        if(confirm(`Delete Sheet ${num}?`)) {
-            let date = document.getElementById('mainDate').value;
-            let sheets = (JSON.parse(localStorage.getItem('sheets_'+date)) || [1]).filter(s => s !== num);
-            localStorage.setItem('sheets_'+date, JSON.stringify(sheets));
-            localStorage.removeItem(`data_${date}_s${num}`);
-            currentSheet = sheets[0] || 1; renderApp();
-        }
-    }
-
-    function enableEditing() { isEditMode = true; renderApp(); }
-
-    function exportBackup() {
+    async function saveAndSync() {
+        saveLocal();
+        showStatus("Uploading to Cloud...");
         let data = {};
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             data[key] = localStorage.getItem(key);
         }
-        let blob = new Blob([JSON.stringify(data)], {type: "application/json"});
-        let a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = "inventory_backup_" + new Date().toISOString().slice(0,10) + ".json";
-        a.click();
+        try {
+            await fetch(G_SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+            alert("Cloud Sync Successful!");
+            isEditMode = false; renderApp();
+        } catch (e) { alert("Cloud Sync Failed!"); }
     }
 
-    function importBackup(event) {
-        let file = event.target.files[0];
-        if (!file) return;
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                let data = JSON.parse(e.target.result);
-                if(confirm("Restore data?")) {
-                    localStorage.clear();
-                    for(let key in data) localStorage.setItem(key, data[key]);
-                    location.reload();
-                }
-            } catch(err) { alert("Invalid File!"); }
-        };
-        reader.readAsText(file);
+    async function loadFromCloud() {
+        try {
+            let res = await fetch(G_SHEET_URL);
+            let onlineData = await res.json();
+            if (onlineData) {
+                localStorage.clear();
+                for (let key in onlineData) { localStorage.setItem(key, onlineData[key]); }
+                renderApp();
+            }
+        } catch (e) { console.log("Load Error"); }
     }
+
+    function renderApp() {
+        let date = document.getElementById('mainDate').value;
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let sheets = JSON.parse(localStorage.getItem('sheets_'+date)) || [1];
+        
+        document.getElementById('sheetList').innerHTML = sheets.map(s => `
+            <div class="sheet-tab ${currentSheet === s ? 'active' : ''}" onclick="currentSheet=${s}; isEditMode=false; renderApp()">
+                Sheet ${s} <span class="del-x" onclick="event.stopPropagation(); deleteSheet(${s})">×</span>
+            </div>
+        `).join('') + `<button class="btn btn-green" onclick="addNewSheet()">+ New</button>`;
+
+        let sheetData = JSON.parse(localStorage.getItem(`data_${date}_s${currentSheet}`)) || { dsr:"", comp:"", entries:{}, damage:0, discount:0, saved:false };
+        let locked = sheetData.saved && !isEditMode;
+
+        document.getElementById('dsrName').value = sheetData.dsr;
+        document.getElementById('compName').value = sheetData.comp;
+        document.getElementById('damageInput').value = sheetData.damage;
+        document.getElementById('discountInput').value = sheetData.discount || 0;
+
+        let body = document.getElementById('inventoryBody');
+        body.innerHTML = master.map((p, i) => {
+            let e = sheetData.entries[p.name] || { dlv:0, rtn:0 };
+            let sale = e.dlv - e.rtn;
+            return `<tr><td>${i+1}</td><td style="text-align:left">${p.name}</td><td>${p.ctn}</td><td>${p.stock}</td>
+            <td><input type="number" id="dlv_${i}" class="qty-input" value="${e.dlv}" oninput="tempCalc()" ${locked?'disabled':''}></td>
+            <td><input type="number" id="rtn_${i}" class="qty-input" value="${e.rtn}" oninput="tempCalc()" ${locked?'disabled':''}></td>
+            <td id="sale_${i}">${sale}</td><td>${p.rate}</td><td id="total_${i}">${(sale*p.rate).toLocaleString()}</td></tr>`;
+        }).join('');
+        tempCalc();
+    }
+
+    function tempCalc() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let grand = 0;
+        master.forEach((p, i) => {
+            let sale = (parseInt(document.getElementById(`dlv_${i}`).value)||0) - (parseInt(document.getElementById(`rtn_${i}`).value)||0);
+            document.getElementById(`sale_${i}`).innerText = sale;
+            document.getElementById(`total_${i}`).innerText = (sale * p.rate).toLocaleString();
+            grand += (sale * p.rate);
+        });
+        document.getElementById('totalDisplay').innerText = grand.toLocaleString();
+        let net = grand - (parseInt(document.getElementById('damageInput').value)||0) - (parseInt(document.getElementById('discountInput').value)||0);
+        document.getElementById('netDisplay').innerText = net.toLocaleString() + " TK";
+    }
+
+    function saveLocal() {
+        let date = document.getElementById('mainDate').value;
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let key = `data_${date}_s${currentSheet}`;
+        let oldData = JSON.parse(localStorage.getItem(key)) || { entries: {} };
+        let entries = {};
+        master.forEach((p, i) => {
+            let dlv = parseInt(document.getElementById(`dlv_${i}`).value)||0;
+            let rtn = parseInt(document.getElementById(`rtn_${i}`).value)||0;
+            let newSale = dlv - rtn;
+            let oldSale = oldData.entries[p.name]?.sale || 0;
+            master[i].stock -= (newSale - oldSale); // স্টক আপডেট
+            entries[p.name] = { dlv, rtn, sale: newSale };
+        });
+        localStorage.setItem(key, JSON.stringify({
+            dsr: document.getElementById('dsrName').value,
+            comp: document.getElementById('compName').value,
+            entries: entries,
+            damage: parseInt(document.getElementById('damageInput').value)||0,
+            discount: parseInt(document.getElementById('discountInput').value)||0,
+            saved: true
+        }));
+        localStorage.setItem('master_products', JSON.stringify(master));
+    }
+
+    function saveNewProduct() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        master.push({ name: document.getElementById('mPName').value, rate: parseFloat(document.getElementById('mPRate').value), ctn: document.getElementById('mPCtn').value, stock: 0 });
+        localStorage.setItem('master_products', JSON.stringify(master));
+        closeModals();
+    }
+
+    function deleteSheet(n) {
+        if(confirm("Delete sheet?")) {
+            let date = document.getElementById('mainDate').value;
+            let sheets = JSON.parse(localStorage.getItem('sheets_'+date)).filter(s => s !== n);
+            localStorage.setItem('sheets_'+date, JSON.stringify(sheets));
+            localStorage.removeItem(`data_${date}_s${n}`);
+            currentSheet = sheets[0] || 1; renderApp();
+        }
+    }
+
+    function addNewSheet() {
+        let date = document.getElementById('mainDate').value;
+        let sheets = JSON.parse(localStorage.getItem('sheets_'+date)) || [1];
+        let next = Math.max(...sheets) + 1;
+        sheets.push(next);
+        localStorage.setItem('sheets_'+date, JSON.stringify(sheets));
+        currentSheet = next; isEditMode = true; renderApp();
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'block'; if(id==='stockModal') loadStock(); if(id==='deleteModal') loadDelete(); }
+    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); renderApp(); }
+
+    function loadStock() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        document.getElementById('stockListContent').innerHTML = master.map((p, i) => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${p.name} (${p.stock})</span><input type="number" style="width:60px" onchange="updStock(${i}, this.value)"></div>`).join('');
+    }
+    function updStock(i, v) { let m = JSON.parse(localStorage.getItem('master_products')); m[i].stock += (parseInt(v)||0); localStorage.setItem('master_products', JSON.stringify(m)); loadStock(); }
+
+    function loadDelete() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        document.getElementById('deleteListContent').innerHTML = master.map((p, i) => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${p.name}</span><button onclick="delProd(${i})">Del</button></div>`).join('');
+    }
+    function delProd(i) { let m = JSON.parse(localStorage.getItem('master_products')); m.splice(i, 1); localStorage.setItem('master_products', JSON.stringify(m)); loadDelete(); }
 </script>
-
 </body>
 </html>
