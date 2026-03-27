@@ -3,144 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Inventory System</title>
+    <title>Inventory Management - Amar JV Trading</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; }
+        :root { --primary: #00a651; --secondary: #1a73e8; --danger: #ea4335; --dark: #2c3e50; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; overflow-x: hidden; }
+
+        /* --- Welcome / Icon Screen (Splash) --- */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #2c3e50, #1a252f);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .app-icon {
+            width: 140px; height: 140px; background: var(--primary);
+            border-radius: 30px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 35px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid white;
+            transition: transform 0.3s; margin-bottom: 20px;
+        }
+        .app-icon:hover { transform: scale(1.1); box-shadow: 0 15px 40px rgba(0, 166, 81, 0.4); }
+        .welcome-text { color: white; font-size: 26px; font-weight: bold; letter-spacing: 2px; }
+        .click-hint { color: #bdc3c7; margin-top: 10px; font-size: 14px; }
+
+        /* --- Main Content (Hidden Initially) --- */
+        #main-content { display: none; padding: 20px; }
+
+        .container { 
+            max-width: 1300px; margin: auto; background: white; padding: 25px; 
+            border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+            position: relative; overflow: hidden;
+        }
+
+        .watermark-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            pointer-events: none; z-index: 0;
+        }
+        .wm-text {
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: bold; color: rgba(0, 0, 0, 0.04);
+            transform: rotate(-25deg); white-space: nowrap;
+        }
+
+        .top-header, .sheet-bar, table, .footer { position: relative; z-index: 2; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
+        .brand-inputs { display: flex; gap: 10px; flex-wrap: wrap; }
+        .brand-inputs div { display: flex; flex-direction: column; font-size: 13px; font-weight: bold; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 4px; }
+
+        .btn { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; display: flex; align-items: center; gap: 5px; font-size: 14px; }
+        .btn-blue { background: var(--secondary); }
+        .btn-green { background: var(--primary); }
+        .btn-orange { background: #f39c12; }
+        .btn-purple { background: #673ab7; }
+        .btn-gray { background: #5f6368; }
+        .btn-backup { background: #27ae60; }
+        .btn-restore { background: #d35400; }
+
+        .sheet-bar { display: flex; align-items: center; gap: 10px; background: #eef2f7; padding: 10px; border-radius: 8px; margin-bottom: 20px; overflow-x: auto; }
+        .sheet-tab { display: flex; align-items: center; background: white; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; padding: 6px 12px; white-space: nowrap; font-weight: bold; }
+        .sheet-tab.active { background: var(--secondary); color: white; border-color: var(--secondary); }
+        .del-x { color: #ff4d4d; font-size: 18px; cursor: pointer; font-weight: bold; margin-left: 8px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; background: transparent; }
+        th { background: var(--dark); color: white; padding: 10px; border: 1px solid #ddd; }
+        td { border: 1px solid #ddd; padding: 8px; text-align: center; background: rgba(255, 255, 255, 0.7); }
+        .qty-input { width: 70px; padding: 5px; text-align: center; border: 1px solid #bbb; border-radius: 4px; }
+        input:disabled { background-color: #f0f0f0; cursor: not-allowed; }
+
+        .footer { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 25px; }
+        .calc-card { width: 340px; background: var(--dark); color: white; padding: 15px; border-radius: 10px; }
+        .calc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .net-payable { border-top: 2px solid #555; padding-top: 10px; font-size: 22px; color: #2ecc71; font-weight: bold; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { background: white; margin: 5% auto; padding: 20px; width: 450px; border-radius: 10px; }
         
-        .header-section { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
-        .date-picker { font-size: 18px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer; }
-        
-        .input-section { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; padding: 10px; border-bottom: 2px solid #eee; }
-        input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; flex: 1; min-width: 150px; }
-        .btn-add { background: #1a73e8; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background-color: #00a651; color: white; padding: 12px; border: 1px solid #ddd; }
-        td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        .btn-delete { background: #ea4335; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
-        
-        .summary { margin-top: 20px; text-align: right; font-size: 22px; font-weight: bold; color: #202124; padding: 15px; background: #e8f0fe; border-radius: 8px; }
-        .print-btn { background: #5f6368; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        @media print { 
+            .no-print { display: none !important; } 
+            .wm-text { color: rgba(0, 0, 0, 0.08); }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Daily Sales & Inventory</h2>
-
-    <div class="header-section">
-        <div>
-            <strong>তারিখ নির্বাচন করুন: </strong>
-            <input type="date" id="currentDate" class="date-picker" onchange="loadDateData()">
-        </div>
-        <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+<div id="splash-screen">
+    <div class="app-icon" onclick="openApp()">
+        Amar JV
     </div>
-
-    <div class="input-section">
-        <input type="text" id="pName" placeholder="প্রোডাক্টের নাম">
-        <input type="number" id="pPrice" placeholder="রেট">
-        <button class="btn-add" onclick="addProduct()">+ Add Product</button>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>SL</th>
-                <th>Item Description</th>
-                <th>DLV</th>
-                <th>RTN</th>
-                <th>Final</th>
-                <th>Price</th>
-                <th>Total Price</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="productTableBody"></tbody>
-    </table>
-
-    <div class="summary" id="grandTotalDisplay">Grand Total: 0 TK</div>
+    <div class="welcome-text">AMAR JV TRADING</div>
+    <div class="click-hint">Click Icon to Open Sheet</div>
 </div>
 
-<script>
-    // আজকের তারিখ ডিফল্ট হিসেবে সেট করা
-    document.getElementById('currentDate').valueAsDate = new Date();
+<div id="main-content">
+    <div class="container">
+        <div class="watermark-layer">
+            <div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div>
+            <div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div>
+            <div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div><div class="wm-text">Amar JV</div>
+        </div>
 
-    function getStorageKey() {
-        return "inventory_" + document.getElementById('currentDate').value;
-    }
+        <div class="top-header">
+            <div class="brand-inputs">
+                <div>DSR <input type="text" id="dsrName"></div>
+                <div>Company <input type="text" id="compName"></div>
+                <div>Date <input type="date" id="mainDate" onchange="renderApp()"></div>
+            </div>
+            <div class="action-bar no-print" style="display:flex; gap:8px; flex-wrap: wrap;">
+                <button class="btn btn-blue" onclick="openModal('productModal')">+ Product</button>
+                <button class="btn btn-orange" onclick="openStockModal()">📦 Add Stock</button>
+                <button class="btn btn-purple" onclick="openDeleteModal()">🗑️ Itm Dlt</button>
+                <button class="btn btn-green" id="saveBtn" onclick="saveCurrentSheet()">💾 Save Sheet</button>
+                <button class="btn btn-backup" onclick="exportBackup()">📥 Backup</button>
+                <button class="btn btn-restore" onclick="document.getElementById('importFile').click()">📤 Restore</button>
+                <input type="file" id="importFile" style="display:none" onchange="importBackup(event)">
+                <button class="btn btn-gray" onclick="window.print()">Print</button>
+            </div>
+        </div>
 
-    function loadDateData() {
-        renderTable();
-    }
+        <div class="sheet-bar no-print" id="sheetList"></div>
 
-    function renderTable() {
-        const key = getStorageKey();
-        let products = JSON.parse(localStorage.getItem(key)) || [];
-        const tableBody = document.getElementById('productTableBody');
-        tableBody.innerHTML = "";
-        let grandTotal = 0;
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 id="viewTitle" style="color:var(--dark); margin:0;">Daily Sheet</h3>
+            <button class="btn btn-purple no-print" id="editBtn" onclick="enableEditing()" style="display:none; font-size: 12px;">✏️ Edit Sheet</button>
+        </div>
 
-        products.forEach((prod, index) => {
-            const final = (prod.dlv || 0) - (prod.rtn || 0);
-            const totalPrice = final * prod.price;
-            grandTotal += totalPrice;
-
-            tableBody.innerHTML += `
+        <table>
+            <thead>
                 <tr>
-                    <td>${index + 1}</td>
-                    <td style="text-align:left">${prod.name}</td>
-                    <td><input type="number" value="${prod.dlv || 0}" onchange="updateQty(${index}, 'dlv', this.value)"></td>
-                    <td><input type="number" value="${prod.rtn || 0}" onchange="updateQty(${index}, 'rtn', this.value)"></td>
-                    <td><b>${final}</b></td>
-                    <td>${prod.price}</td>
-                    <td style="color:red; font-weight:bold">${totalPrice.toLocaleString()}</td>
-                    <td><button class="btn-delete" onclick="deleteProduct(${index})">Delete</button></td>
+                    <th>SL</th>
+                    <th>Item Description</th>
+                    <th>CTN Size</th>
+                    <th>Stock</th>
+                    <th>DLV</th>
+                    <th>RTN</th>
+                    <th>Sale</th>
+                    <th>Rate</th>
+                    <th>Total Price</th>
                 </tr>
-            `;
+            </thead>
+            <tbody id="inventoryBody"></tbody>
+        </table>
+
+        <div class="footer">
+            <div class="no-print" style="color: #666; font-size: 13px;"><p id="statusMsg">💡 প্রতি শিটে আলাদা নাম লিখে সেভ করুন।</p></div>
+            <div class="calc-card">
+                <div class="calc-row"><span>Gross Total:</span> <span id="totalDisplay">0</span></div>
+                <div class="calc-row"><span>Damage Amount:</span> <input type="number" id="damageInput" class="qty-input" value="0" oninput="tempCalc()"></div>
+                <div class="calc-row"><span>Discount (-):</span> <input type="number" id="discountInput" class="qty-input" value="0" oninput="tempCalc()" style="border-color: #f39c12;"></div>
+                <div class="net-payable"><div style="display:flex; justify-content:space-between"><span>Net Payable:</span> <span id="netDisplay">0</span></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="productModal" class="modal"><div class="modal-content"><h3>Add New Product</h3><label>Name</label><input type="text" id="mPName" style="width:95%"><br><br><label>Rate</label><input type="number" id="mPRate" style="width:95%"><br><br><label>CTN Size</label><input type="number" id="mPCtn" value="1" style="width:95%"><br><br><label>Stock</label><input type="number" id="mPStock" value="0" style="width:95%"><br><br><button class="btn btn-blue" style="width:100%" onclick="saveNewProduct()">Save Product</button></div></div>
+<div id="deleteItemModal" class="modal"><div class="modal-content"><h3>Delete Product List</h3><div id="deleteListContent"></div><br><button class="btn btn-gray" style="width:100%" onclick="closeModals()">Close</button></div></div>
+<div id="stockModal" class="modal"><div class="modal-content"><h3>Add Stock Quantity</h3><div id="stockListContent"></div><br><button class="btn btn-green" style="width:100%" onclick="closeModals()">Done</button></div></div>
+
+<script>
+    let currentSheet = 1;
+    let isEditMode = true;
+    document.getElementById('mainDate').valueAsDate = new Date();
+
+    // OPEN APP FUNCTION (Splash Screen Transition)
+    function openApp() {
+        const splash = document.getElementById('splash-screen');
+        const main = document.getElementById('main-content');
+        splash.style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+            splash.style.display = 'none';
+            main.style.display = 'block';
+            renderApp();
+        }, 600);
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'block'; }
+    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); renderApp(); }
+
+    function openDeleteModal() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let content = document.getElementById('deleteListContent');
+        content.innerHTML = master.map((p, i) => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                <span>${p.name}</span><button class="btn btn-orange" style="padding:4px 8px; font-size:12px;" onclick="deleteProduct(${i})">Delete</button>
+            </div>
+        `).join('') || "No products found.";
+        openModal('deleteItemModal');
+    }
+
+    function openStockModal() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let content = document.getElementById('stockListContent');
+        content.innerHTML = master.map((p, i) => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee;">
+                <span>${p.name} (${p.stock})</span><input type="number" placeholder="+Qty" style="width:60px" onchange="updateMasterStock(${i}, this.value)">
+            </div>
+        `).join('');
+        openModal('stockModal');
+    }
+
+    function updateMasterStock(idx, val) {
+        let master = JSON.parse(localStorage.getItem('master_products'));
+        master[idx].stock += (parseInt(val) || 0);
+        localStorage.setItem('master_products', JSON.stringify(master));
+        openStockModal();
+    }
+
+    function saveNewProduct() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        master.push({
+            name: document.getElementById('mPName').value,
+            rate: parseFloat(document.getElementById('mPRate').value),
+            ctn: parseInt(document.getElementById('mPCtn').value) || 1,
+            stock: parseInt(document.getElementById('mPStock').value) || 0
+        });
+        localStorage.setItem('master_products', JSON.stringify(master));
+        closeModals();
+    }
+
+    function deleteProduct(idx) {
+        if(confirm("Delete item?")) {
+            let master = JSON.parse(localStorage.getItem('master_products')) || [];
+            master.splice(idx, 1);
+            localStorage.setItem('master_products', JSON.stringify(master));
+            openDeleteModal(); renderApp();
+        }
+    }
+
+    function saveCurrentSheet() {
+        let date = document.getElementById('mainDate').value;
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let key = `data_${date}_s${currentSheet}`;
+        let oldData = JSON.parse(localStorage.getItem(key)) || { entries: {} };
+        
+        let newEntries = {};
+        master.forEach((p, i) => {
+            let dlv = parseInt(document.getElementById(`dlv_${i}`).value) || 0;
+            let rtn = parseInt(document.getElementById(`rtn_${i}`).value) || 0;
+            let newSale = dlv - rtn;
+            let oldSale = oldData.entries[p.name]?.sale || 0;
+            master[i].stock -= (newSale - oldSale);
+            newEntries[p.name] = { dlv, rtn, sale: newSale };
         });
 
-        document.getElementById('grandTotalDisplay').innerText = "Grand Total: " + grandTotal.toLocaleString() + " TK";
+        localStorage.setItem(key, JSON.stringify({ 
+            dsr: document.getElementById('dsrName').value,
+            comp: document.getElementById('compName').value,
+            entries: newEntries, 
+            damage: parseInt(document.getElementById('damageInput').value) || 0,
+            discount: parseInt(document.getElementById('discountInput').value) || 0,
+            saved: true 
+        }));
+        localStorage.setItem('master_products', JSON.stringify(master));
+        isEditMode = false; alert("Sheet Saved!"); renderApp();
     }
 
-    function addProduct() {
-        const name = document.getElementById('pName').value;
-        const price = parseFloat(document.getElementById('pPrice').value);
-        const key = getStorageKey();
-        let products = JSON.parse(localStorage.getItem(key)) || [];
+    function renderApp() {
+        let date = document.getElementById('mainDate').value;
+        let sheets = JSON.parse(localStorage.getItem('sheets_'+date)) || [1];
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        
+        document.getElementById('sheetList').innerHTML = sheets.map(s => `
+            <div class="sheet-tab ${currentSheet === s ? 'active' : ''}" onclick="currentSheet=${s}; isEditMode=false; renderApp()">
+                Sheet ${s} <span class="del-x" onclick="event.stopPropagation(); deleteSheet(${s})">×</span>
+            </div>
+        `).join('') + `<button class="btn btn-green no-print" style="padding:4px 8px; margin-left:10px;" onclick="addNewSheet()">+ New</button>`;
 
-        if (name && price) {
-            products.push({ name, price, dlv: 0, rtn: 0 });
-            localStorage.setItem(key, JSON.stringify(products));
-            document.getElementById('pName').value = "";
-            document.getElementById('pPrice').value = "";
-            renderTable();
-        } else {
-            alert("সঠিক তথ্য দিন!");
+        let sheetData = JSON.parse(localStorage.getItem(`data_${date}_s${currentSheet}`)) || { dsr: "", comp: "", entries: {}, damage: 0, discount: 0, saved: false };
+        let locked = sheetData.saved && !isEditMode;
+        
+        document.getElementById('dsrName').value = sheetData.dsr || "";
+        document.getElementById('compName').value = sheetData.comp || "";
+        document.getElementById('dsrName').disabled = locked;
+        document.getElementById('compName').disabled = locked;
+
+        document.getElementById('editBtn').style.display = (sheetData.saved && !isEditMode) ? 'block' : 'none';
+        document.getElementById('saveBtn').disabled = locked;
+
+        let body = document.getElementById('inventoryBody');
+        body.innerHTML = master.map((p, i) => {
+            let dlv = sheetData.entries[p.name]?.dlv || 0;
+            let rtn = sheetData.entries[p.name]?.rtn || 0;
+            let sale = dlv - rtn;
+            return `<tr><td>${i+1}</td><td style="text-align:left">${p.name}</td><td>${p.ctn}</td><td style="background:rgba(255, 249, 196, 0.5); font-weight:bold">${p.stock}</td><td><input type="number" id="dlv_${i}" class="qty-input" value="${dlv}" oninput="tempCalc()" ${locked ? 'disabled' : ''}></td><td><input type="number" id="rtn_${i}" class="qty-input" value="${rtn}" oninput="tempCalc()" ${locked ? 'disabled' : ''}></td><td>${sale}</td><td>${p.rate}</td><td style="color:var(--primary); font-weight:bold">${(sale * p.rate).toLocaleString()}</td></tr>`;
+        }).join('');
+
+        document.getElementById('damageInput').value = sheetData.damage;
+        document.getElementById('discountInput').value = sheetData.discount || 0;
+        document.getElementById('damageInput').disabled = locked;
+        document.getElementById('discountInput').disabled = locked;
+        document.getElementById('viewTitle').innerText = `Sheet: ${currentSheet} | ${date}`;
+        tempCalc();
+    }
+
+    function tempCalc() {
+        let master = JSON.parse(localStorage.getItem('master_products')) || [];
+        let grandTotal = 0;
+        master.forEach((p, i) => {
+            let sale = (parseInt(document.getElementById(`dlv_${i}`).value) || 0) - (parseInt(document.getElementById(`rtn_${i}`).value) || 0);
+            grandTotal += (sale * p.rate);
+        });
+        document.getElementById('totalDisplay').innerText = grandTotal.toLocaleString();
+        let dmg = parseInt(document.getElementById('damageInput').value) || 0;
+        let disc = parseInt(document.getElementById('discountInput').value) || 0;
+        document.getElementById('netDisplay').innerText = (grandTotal - dmg - disc).toLocaleString() + " TK";
+    }
+
+    function addNewSheet() {
+        let date = document.getElementById('mainDate').value;
+        let sheets = JSON.parse(localStorage.getItem('sheets_'+date)) || [1];
+        let next = sheets.length > 0 ? Math.max(...sheets) + 1 : 1;
+        sheets.push(next);
+        localStorage.setItem('sheets_'+date, JSON.stringify(sheets));
+        currentSheet = next; isEditMode = true; renderApp();
+    }
+
+    function deleteSheet(num) {
+        if(confirm(`Delete Sheet ${num}?`)) {
+            let date = document.getElementById('mainDate').value;
+            let sheets = (JSON.parse(localStorage.getItem('sheets_'+date)) || [1]).filter(s => s !== num);
+            localStorage.setItem('sheets_'+date, JSON.stringify(sheets));
+            localStorage.removeItem(`data_${date}_s${num}`);
+            currentSheet = sheets[0] || 1; renderApp();
         }
     }
 
-    function updateQty(index, field, value) {
-        const key = getStorageKey();
-        let products = JSON.parse(localStorage.getItem(key)) || [];
-        products[index][field] = parseInt(value) || 0;
-        localStorage.setItem(key, JSON.stringify(products));
-        renderTable();
-    }
+    function enableEditing() { isEditMode = true; renderApp(); }
 
-    function deleteProduct(index) {
-        if(confirm("ডিলিট করতে চান?")) {
-            const key = getStorageKey();
-            let products = JSON.parse(localStorage.getItem(key)) || [];
-            products.splice(index, 1);
-            localStorage.setItem(key, JSON.stringify(products));
-            renderTable();
+    function exportBackup() {
+        let data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            data[key] = localStorage.getItem(key);
         }
+        let blob = new Blob([JSON.stringify(data)], {type: "application/json"});
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "inventory_backup_" + new Date().toISOString().slice(0,10) + ".json";
+        a.click();
     }
 
-    // শুরুতে ডাটা লোড করা
-    renderTable();
+    function importBackup(event) {
+        let file = event.target.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                let data = JSON.parse(e.target.result);
+                if(confirm("Restore data?")) {
+                    localStorage.clear();
+                    for(let key in data) localStorage.setItem(key, data[key]);
+                    location.reload();
+                }
+            } catch(err) { alert("Invalid File!"); }
+        };
+        reader.readAsText(file);
+    }
 </script>
 
 </body>
